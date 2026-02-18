@@ -30,13 +30,21 @@ const hasInvalidInput = (inputList) => {
   return inputList.some((inputElement) => !inputElement.validity.valid);
 };
 
+const disableSubmitButton = (buttonElement, settings) => {
+  buttonElement.disabled = true;
+  buttonElement.classList.add(settings.inactiveButtonClass);
+};
+
+const enableSubmitButton = (buttonElement, settings) => {
+  buttonElement.disabled = false;
+  buttonElement.classList.remove(settings.inactiveButtonClass);
+};
+
 const toggleButtonState = (inputList, buttonElement, settings) => {
   if (hasInvalidInput(inputList)) {
-    buttonElement.disabled = true;
-    buttonElement.classList.add(settings.inactiveButtonClass);
+    disableSubmitButton(buttonElement, settings);
   } else {
-    buttonElement.disabled = false;
-    buttonElement.classList.remove(settings.inactiveButtonClass);
+    enableSubmitButton(buttonElement, settings);
   }
 };
 
@@ -56,7 +64,6 @@ const setEventListeners = (formElement, settings) => {
   });
 };
 
-// очистка ошибок валидации
 export const clearValidation = (formElement, settings) => {
   const inputList = Array.from(
     formElement.querySelectorAll(settings.inputSelector)
@@ -68,11 +75,9 @@ export const clearValidation = (formElement, settings) => {
     inputElement.setCustomValidity("");
   });
 
-  buttonElement.disabled = true;
-  buttonElement.classList.add(settings.inactiveButtonClass);
+  disableSubmitButton(buttonElement, settings);
 };
 
-// включение валидации
 export const enableValidation = (settings) => {
   const formList = Array.from(
     document.querySelectorAll(settings.formSelector)
