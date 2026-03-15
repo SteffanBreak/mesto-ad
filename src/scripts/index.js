@@ -6,13 +6,13 @@
   Из index.js не допускается что то экспортировать
 */
 
-import { createCardElement, likeCard } from "./components/card.js";
+import { createCardElement, likeCard } from './components/card.js';
 import {
   openModalWindow,
   closeModalWindow,
   setCloseModalWindowEventListeners,
-} from "./components/modal.js";
-import { enableValidation, clearValidation } from "./components/validation.js";
+} from './components/modal.js';
+import { enableValidation, clearValidation } from './components/validation.js';
 import {
   getUserInfo,
   getCardList,
@@ -20,9 +20,9 @@ import {
   setUserAvatar,
   addNewCard,
   deleteCardFromServer,
-} from "./components/api.js";
+} from './components/api.js';
 
-import "../pages/index.css";
+import '../pages/index.css';
 
 const validationSettings = {
   formSelector: ".popup__form",
@@ -108,10 +108,10 @@ const handleProfileFormSubmit = (evt) => {
       closeModalWindow(profileFormModalWindow);
     })
     .catch((err) => {
-      console.log(err);
+      console.error(err);
     })
     .finally(() => {
-      renderLoading(submitButton, false, "Сохранить");
+      renderLoading(submitButton, false, 'Сохранить');
     });
 };
 
@@ -128,10 +128,10 @@ const handleAvatarFormSubmit = (evt) => {
       closeModalWindow(avatarFormModalWindow);
     })
     .catch((err) => {
-      console.log(err);
+      console.error(err);
     })
     .finally(() => {
-      renderLoading(submitButton, false, "Сохранить");
+      renderLoading(submitButton, false, 'Сохранить');
     });
 };
 
@@ -152,7 +152,6 @@ const handleCardFormSubmit = (evt) => {
             onPreviewPicture: handlePreviewPicture,
             onLikeIcon: likeCard,
             onDeleteCard: handleDeleteClick,
-            onInfoClick: handleInfoClick,
           },
           currentUserId
         )
@@ -163,10 +162,10 @@ const handleCardFormSubmit = (evt) => {
       closeModalWindow(cardFormModalWindow);
     })
     .catch((err) => {
-      console.log(err);
+      console.error(err);
     })
     .finally(() => {
-      renderLoading(submitButton, false, "Создать");
+      renderLoading(submitButton, false, 'Создать');
     });
 };
 
@@ -189,10 +188,10 @@ const handleRemoveCardFormSubmit = (evt) => {
       closeModalWindow(removeCardModalWindow);
     })
     .catch((err) => {
-      console.log(err);
+      console.error(err);
     })
     .finally(() => {
-      renderLoading(submitButton, false, "Да");
+      renderLoading(submitButton, false, 'Да');
     });
 };
 
@@ -221,8 +220,12 @@ const createUserPreview = (userName) => {
 const handleLogoClick = () => {
   getCardList()
     .then((cards) => {
-      usersStatsModalInfoList.innerHTML = "";
-      usersStatsModalUsersList.innerHTML = "";
+      while (usersStatsModalInfoList.firstChild) {
+        usersStatsModalInfoList.removeChild(usersStatsModalInfoList.firstChild);
+      }
+      while (usersStatsModalUsersList.firstChild) {
+        usersStatsModalUsersList.removeChild(usersStatsModalUsersList.firstChild);
+      }
 
       const usersMap = {};
       cards.forEach((card) => {
@@ -238,28 +241,28 @@ const handleLogoClick = () => {
 
       const uniqueUsers = Object.values(usersMap);
 
-      usersStatsModalTitle.textContent = "Статистика пользователей";
+      usersStatsModalTitle.textContent = 'Статистика пользователей';
 
       usersStatsModalInfoList.append(
-        createInfoString("Всего карточек:", cards.length)
+        createInfoString('Всего карточек:', cards.length)
       );
       usersStatsModalInfoList.append(
-        createInfoString("Всего пользователей:", uniqueUsers.length)
+        createInfoString('Всего пользователей:', uniqueUsers.length)
       );
       usersStatsModalInfoList.append(
         createInfoString(
-          "Первая создана:",
+          'Первая создана:',
           formatDate(new Date(cards[cards.length - 1].createdAt))
         )
       );
       usersStatsModalInfoList.append(
         createInfoString(
-          "Последняя создана:",
+          'Последняя создана:',
           formatDate(new Date(cards[0].createdAt))
         )
       );
 
-      usersStatsModalText.textContent = "Пользователи";
+      usersStatsModalText.textContent = 'Пользователи';
 
       uniqueUsers.forEach((user) => {
         usersStatsModalUsersList.append(
@@ -270,11 +273,8 @@ const handleLogoClick = () => {
       openModalWindow(usersStatsModalWindow);
     })
     .catch((err) => {
-      console.log(err);
+      console.error(err);
     });
-};
-
-const handleInfoClick = (cardId) => {
 };
 
 // EventListeners
@@ -320,7 +320,6 @@ Promise.all([getCardList(), getUserInfo()])
             onPreviewPicture: handlePreviewPicture,
             onLikeIcon: likeCard,
             onDeleteCard: handleDeleteClick,
-            onInfoClick: handleInfoClick,
           },
           currentUserId
         )
@@ -328,7 +327,7 @@ Promise.all([getCardList(), getUserInfo()])
     });
   })
   .catch((err) => {
-    console.log(err);
+    console.error(err);
   });
 
 //настраиваем обработчики закрытия попапов
